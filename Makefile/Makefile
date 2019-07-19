@@ -4,24 +4,17 @@ DIR_SRC = .
 DIR_OBJ = .
 DIR_BIN = .
 
-NCF_LIB = /GPFS/cess/JiHan/Toollib/netcdf/lib
-NCF_INC = /GPFS/cess/JiHan/Toollib/netcdf/include
-PNCF_LIB = /GPFS/cess/gaoyuan/pnetcdf/lib
-PNCF_INC =/GPFS/cess/gaoyuan/pnetcdf/include
-NCL_INC = /GPFS/cess/gaoyuan/ncl/include 
-NCL_LIB = /GPFS/cess/gaoyuan/ncl/lib
-HDF5_INC = /GPFS/cess/JiHan/Toollib/hdf5-1.8.20/include 
-HDF5_LIB = /GPFS/cess/JiHan/Toollib/hdf5-1.8.20/lib
-CAIRO_LIB=/GPFS/cess/syang/cairo-1.14.10-install/lib
+EVENT_LIB = /usr/local/lib
+EVENT_INC = /usr/local/include
 
-ALL_LD = -L${PNCF_LIB} -L${NCL_LIB} -L${CAIRO_LIB} -L${HDF5_LIB} -L${NCF_LIB}
-ALL_INC = -I${PNCF_INC} -I${NCL_INC} -I${HDF5_INC} -I${NCF_INC}
-NCAR_LLIB = -lnetcdf -lcurl -lssl -lidn -lrt -lldap -lhdf5_hl -lhdf5 -lsz -lhlu -lncarg -lncarg_gks -lncarg_c -lX11 -lXext -lcairo -lfontconfig -lpixman-1 -lfreetype -lexpat -lpng -lz -lpthread -lXrender -lbz2 -lgfortran -lm
-ALL_LIB = -lpnetcdf ${NCAR_LLIB}
 
-CXX = mpiicxx
+#ALL_LD = -L${EVENT_LIB}
+#ALL_INC = -I${EVENT_INC}
+ALL_LIB = -lssl
+
+CXX = g++
 CC = gcc
-CFLAGS = -g -O2 -fPIC -fopenmp
+CFLAGS = -g -O2
 MPIF90 = mpiif90
 
 SRC = $(wildcard ${DIR_SRC}/*.c)
@@ -29,8 +22,10 @@ OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,$(notdir ${SRC}))
 
 TARGET = a.out
 
-all:
 BIN_TARGET = ${DIR_BIN}/${TARGET}
+
+.PHONY:all
+all: ${BIN_TARGET}
 
 ${BIN_TARGET}: ${OBJ}
 	$(CC) $(CFLAGS) $(OBJ)  -o $@ $(ALL_LD) $(ALL_LIB)
@@ -58,7 +53,7 @@ one: ${IN}.c
 .PHONY:maketest
 maketest:
 	-echo ${SRC}
-	-echo ${OBJ}
+	-echo ${OBJ} ${BIN_TARGET}
 	-echo $(notdir ${SRC})
 
 #（1）Makefile中的 符号 $@, $^, $< 的意思：
