@@ -14,7 +14,8 @@ ALL_LIB = -lssl
 
 CXX = g++
 CC = gcc
-CFLAGS = -g -O2
+#CFLAGS = -g -O2
+CFLAGS = -g -O2 -Wall -Werror
 MPIF90 = mpiif90
 
 SRC = $(wildcard ${DIR_SRC}/*.c)
