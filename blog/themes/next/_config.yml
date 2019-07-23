@@ -54,8 +54,8 @@ menu:
   home: /
   categories: /categories/
   #about: /about/
-  #archives: /archives/
   tags: /tags/
+  archives: /archives/
   #sitemap: /sitemap.xml
   #commonweal: /404/
 
@@ -101,7 +101,7 @@ scheme: Pisces
 social:
   #LinkLabel: Link
   GitHub: https://github.com/JiHanHuang/
-  E-Mail: Mr.JiHan.Mail@gmail.com
+  E-Mail: mailto:Mr.JiHan.Mail@gmail.com
 
 # Social Links Icons
 # Icon Mapping:
@@ -174,7 +174,7 @@ sidebar:
   offset_float: 12
 
   # Back to top in sidebar
-  b2t: false
+  b2t: true
 
   # Scroll percent label in b2t button
   scrollpercent: true

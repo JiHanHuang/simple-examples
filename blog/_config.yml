@@ -4,7 +4,7 @@
 
 # Site
 title: JiHan's Blog
-subtitle: ~_~
+subtitle: 随笔写写啦 (๑`･ᴗ･´๑)
 description: 瘫着贼舒服
 keywords:
 author: JiHan
@@ -78,13 +78,6 @@ plugins: hexo-generate-feed
 #theme: landscape
 theme: next
 
-# Deployment
-## Docs: https://hexo.io/docs/deployment.html
-deploy:
-  type: git
-  repository: https://github.com/JiHanHuang/JiHanHuang.github.io
-  branch: master
-  
 #local search
 search:
   path: search.xml
@@ -92,4 +85,31 @@ search:
   format: html
   limit: 10000
   content: true
+
+live2d:
+  enable: true
+  scriptFrom: local
+  pluginRootPath: live2dw/
+  pluginJsPath: lib/
+  pluginModelPath: assets/
+  tagMode: false
+  #选择哪种模型
+  model:
+    #use: live2d-widget-model-tororo  #白猫
+    use: live2d-widget-model-hijiki #黑猫
+    #use: live2d-widget-model-koharu #妹子
+  display: #放置位置和大小
+    position: right
+    width: 150
+    height: 300
+  mobile:
+    show: false #是否在手机端显示
+
+# Deployment
+## Docs: https://hexo.io/docs/deployment.html
+deploy:
+  type: git
+  repository: https://github.com/JiHanHuang/JiHanHuang.github.io
+  branch: master
+  
   
