@@ -4,22 +4,26 @@ DIR_SRC = .
 DIR_OBJ = .
 DIR_BIN = .
 
-EVENT_LIB = /usr/local/lib
-EVENT_INC = /usr/local/include
+DEFAULT_LIB = /usr/lib64/
+APR_INC = `pkg-config --cflags apr-1`
+G_INC = `pkg-config --cflags glib-2.0`
+REDIS_INC = /usr/local/include/hiredis/
 
 
-#ALL_LD = -L${EVENT_LIB}
-#ALL_INC = -I${EVENT_INC}
-ALL_LIB = -lssl
+ALL_LD = -L${DEFAULT_LIB} 
+ALL_INC = 
+#ALL_LIB = -lssl -lapr-1 -pthread -lgthread-2.0 -lrt -lglib-2.0 -lhiredis
+ALL_LIB = 
 
 CXX = g++
 CC = gcc
-#CFLAGS = -g -O2
 CFLAGS = -g -O2 -Wall -Werror
 MPIF90 = mpiif90
 
-SRC = $(wildcard ${DIR_SRC}/*.c)
-OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,$(notdir ${SRC}))
+#SRC = $(wildcard ${DIR_SRC}/*.c)
+#OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,$(notdir ${SRC}))
+SRC = test.c add.c 
+OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,${SRC})
 
 TARGET = a.out
 
@@ -53,15 +57,17 @@ one: ${IN}.c
 
 .PHONY:maketest
 maketest:
-	-echo ${SRC}
-	-echo ${OBJ} ${BIN_TARGET}
-	-echo $(notdir ${SRC})
+	@-echo "source:"${SRC}
+	@-echo "object:"${OBJ} " target:"${BIN_TARGET}
+	@-echo $(notdir ${SRC})
 
-#（1）Makefile中的 符号 $@, $^, $< 的意思：
+#（1）Makefile中的 符号 $@, $^, $< 等意思：
 #　　$@  表示目标文件
 #　　$^  表示所有的依赖文件
 #　　$<  表示第一个依赖文件
 #　　$?  表示比目标还要新的依赖文件列表
+#	 - 	 表示出错继续执行
+#	 @   表示命令不回显
 
 #（2）wildcard、notdir、patsubst的意思：
 #　　wildcard : 扩展通配符
