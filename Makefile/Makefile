@@ -1,3 +1,11 @@
+#
+# Makefile 
+# 使用方法：
+# 0.配置Makefile中的lib，inc等路径，以及编译选项
+# 1.直接make(对应文件夹下的所有c文件都会编译)
+# 2.部分编译：make src='test.c aad.c'
+#	-- by jihan
+#
 
 DIR_INC = .
 DIR_SRC = .
@@ -5,29 +13,32 @@ DIR_OBJ = .
 DIR_BIN = .
 
 DEFAULT_LIB = /usr/lib64/
-APR_INC = `pkg-config --cflags apr-1`
-G_INC = `pkg-config --cflags glib-2.0`
-REDIS_INC = /usr/local/include/hiredis/
+#APR_INC = `pkg-config --cflags apr-1`
+#G_INC = `pkg-config --cflags glib-2.0`
+#REDIS_INC = /usr/local/include/hiredis/
 
 
 ALL_LD = -L${DEFAULT_LIB} 
 ALL_INC = 
-#ALL_LIB = -lssl -lapr-1 -pthread -lgthread-2.0 -lrt -lglib-2.0 -lhiredis
 ALL_LIB = 
 
 CXX = g++
 CC = gcc
-CFLAGS = -g -O2 -Wall -Werror
+CFLAGS = -g -O2 -Wall -Werror -rdynamic
 MPIF90 = mpiif90
 
-#SRC = $(wildcard ${DIR_SRC}/*.c)
-#OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,$(notdir ${SRC}))
-SRC = test.c add.c 
+SRC=$(src)
+ifeq ("X${SRC}", "X")
+SRC = $(wildcard ${DIR_SRC}/*.c)
+OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,$(notdir ${SRC}))
+else
 OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,${SRC})
+endif
 
 TARGET = a.out
 
 BIN_TARGET = ${DIR_BIN}/${TARGET}
+
 
 .PHONY:all
 all: ${BIN_TARGET}
@@ -42,18 +53,6 @@ ${DIR_OBJ}/%.o:${DIR_SRC}/%.c
 clean:
 	-rm -f *.out
 	-rm -f *.o
-#	-rm -f ./ncfile/*.nc
-
-
-fixed=xy04c
-.PHONY:${fixed}
-${fixed}: ${fixed}.c
-	$(CC) $(CFLAGS) -o $@.out $< $(ALL_LD) $(ALL_INC) $(ALL_LIB)
-
-IN=$(in)
-.PHONY:one
-one: ${IN}.c
-	$(CC) $(CFLAGS) -o ${IN}.out $< $(ALL_LD) $(ALL_INC) $(ALL_LIB)
 
 .PHONY:maketest
 maketest:
