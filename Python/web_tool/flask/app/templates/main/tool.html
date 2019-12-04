@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %} 
+    <a href="{{ url_for('main.tool_post_json') }}">Post json</a>
+    <br>
+    <a href="{{ url_for('main.tool_export_err') }}">Export error</a>
+    <br>
+{% endblock %}

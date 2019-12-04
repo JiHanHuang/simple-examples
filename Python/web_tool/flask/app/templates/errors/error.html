@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    {% for err in code_list %}
+        {% if err.code == code %}
+            <h1>{{ err.code }}: {{ err.msg }}</h1>
+            <p>{{ err.info }}</p>
+        {% endif %}
+    {% endfor %}
+{% endblock %}

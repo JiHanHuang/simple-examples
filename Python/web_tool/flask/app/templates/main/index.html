@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block app_content %} 
+    <table>
+        <tr valign="top">
+            {% if current_user.is_anonymous %}
+            <td><h1>Hello World!</h1></td>
+            {% else %}
+            <td><h1>Hi, {{ current_user.username }}</h1></td>
+            {% endif %}
+        </tr>
+    </table>
+    {% if current_user.is_anonymous %}
+        <a href="{{ url_for('auth.login') }}">Login</a>
+    {% else %}
+        <a href="{{ url_for('auth.logout') }}">Logout</a>
+    {% endif %}
+    <br>
+    <a href="{{ url_for('main.user') }}">User</a>
+    <br>
+{% endblock %}

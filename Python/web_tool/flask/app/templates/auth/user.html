@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block app_content %}
+    <table>
+        <tr valign="top">
+            <td><img src="{{ current_user.avatar(38) }}"></td>
+            {% if current_user.is_anonymous %}
+            <td><h1>Hello World!</h1></td>
+            {% else %}
+            <td><h1>Hi, {{ current_user.username }}</h1></td>
+            {% endif %}
+        </tr>
+    </table>
+
+{% endblock %}

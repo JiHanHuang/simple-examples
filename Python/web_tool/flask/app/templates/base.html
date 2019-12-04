@@ -1,0 +1,36 @@
+{% extends 'bootstrap/base.html' %}
+
+{% block title %}
+    {% if title %}
+        {{ title }} - Service Tool
+    {% else %}
+        Welcome to Service Tool
+    {% endif %}
+{% endblock %}
+
+{% block navbar %}
+    <nav class="navbar navbar-default">
+        ... navigation bar here (see complete code on GitHub) ...
+    </nav>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+            <p>Service Tool:</p>
+            <a href="{{ url_for('main.index') }}">Home</a>
+            <a href="{{ url_for('main.tool') }}">Tool</a>
+        <hr>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <ul>
+            {% for message in messages %}
+            <div class="alert alert-info" role="alert">{{ message }}</div>
+            {% endfor %}
+        </ul>
+        {% endif %}
+        {% endwith %}
+
+        {# application content needs to be provided in the app_content block #}
+        {% block app_content %}{% endblock %}
+    </div>
+{% endblock %}
