@@ -8,7 +8,6 @@ if [ ! -d "${path}/${venv_name}" ]; then
     python3 -m venv "${venv_name}"
 fi
 echo "Change venv..."
-conda deactivate
 source ${venv_name}/bin/activate
 echo "Install dependent files..."
 pip install -r requirements.txt
