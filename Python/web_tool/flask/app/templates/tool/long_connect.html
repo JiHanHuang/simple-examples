@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block app_content %} 
+<h2>Long Connection</h2>
+<script src="//code.jquery.com/jquery-1.12.4.min.js" integrity="sha256-ZosEbRLbNQzLpnKIkEdrPv7lOy9C27hHQ+Xp8a4MxAQ=" crossorigin="anonymous"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/2.2.0/socket.io.js" integrity="sha256-yr4fRk/GU1ehYJPAs8P4JlTgu0Hdsp4ZKrx8bDEDC3I=" crossorigin="anonymous"></script>
+    <div class="row">
+        <div class="col-md-4">
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    namespace = '/tool_io';
+                    var socket = io(namespace);
+                    socket.on('connect', function() {
+                        socket.emit('recv_msg', {data: 'I\'m connected!'});
+                    });
+                    socket.on('server_log', function(msg, cb) {
+                        $('#log').append('<br>' + $('<div/>').text('Received: ' + msg.data).html());
+                        //$('#log').append(''.text('Received: ' + msg.data));
+                        if (cb)
+                            cb();
+                    });
+
+                    socket.on('server_msg', function(msg) {
+                        $('#msg').text('Time: ' + msg.data);
+                    });
+            
+                });
+                
+            </script>
+            <h2 id="msg"></h2>
+            <div id="log"></div>
+        </div>
+    </div>
+{% endblock %}

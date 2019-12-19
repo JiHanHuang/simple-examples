@@ -1,4 +1,4 @@
-from app import db
+from app import db, socketio
 from flask import render_template, flash, redirect, url_for, abort
 from app.tool.forms import PostDataForm, InputNumForm, GetDataForm, InputDataForm, InputStrForm
 from flask_login import current_user, login_user, logout_user, login_required
@@ -9,8 +9,14 @@ from urllib import request, parse, error
 from app.tool import bp
 from app.errors.handlers import err_code_list
 from app.tool.service import Service, data_type_list
+from flask_socketio import send, emit
 
+from threading import Lock
 import json
+import time
+
+thread = None
+thread_lock = Lock()
 
 @bp.route('/service', methods=['GET', 'POST'])
 def tool_service():
@@ -114,3 +120,35 @@ def tool_export_err_code(err_code):
         abort(err_code)
     else:
         abort(404)
+
+
+
+@bp.route('/long_connect')
+def tool_long_connect():
+   return render_template('tool/long_connect.html', title='Long Connection')
+
+def background_thread():
+    count = 0
+    while True:
+        count += 1
+        t = time.strftime('%M:%S', time.localtime())
+        socketio.emit('server_msg', {'data': t, 'count': count}, namespace='/tool_io')
+        socketio.sleep(1)
+
+@socketio.on('connect', namespace='/tool_io')
+def tool_connect():
+    print('Client connected')
+    global thread
+    with thread_lock:
+        if thread is None:
+            thread = socketio.start_background_task(target=background_thread)
+    emit("server_log", {'data':'Connect'})
+
+@socketio.on('disconnect', namespace='/tool_io')
+def tool_disconnect():
+    print('Client disconnected')
+
+@socketio.on('recv_msg', namespace='/tool_io')
+def tool_recv_msg(message):
+    print("message:" + message['data'])
+    emit("server_log", {'data': message['data']})

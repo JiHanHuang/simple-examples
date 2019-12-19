@@ -6,6 +6,7 @@ from flask_sqlalchemy import SQLAlchemy
 #data base migrate
 from flask_migrate import Migrate
 from flask_bootstrap import Bootstrap
+from flask_socketio import SocketIO
 import ssl
 
 db = SQLAlchemy()
@@ -14,6 +15,7 @@ login = LoginManager()
 login.login_view = 'auth.login'
 login.login_message = 'Please log in to access this page.'
 bootstrap = Bootstrap()
+socketio = SocketIO()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
@@ -23,6 +25,7 @@ def create_app(config_class=Config):
     migrate.init_app(app, db)
     login.init_app(app)
     bootstrap.init_app(app)
+    socketio.init_app(app)
 
     # ... no changes to blueprint registration
     from app.errors import bp as errors_bp
