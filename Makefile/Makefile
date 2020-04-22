@@ -19,9 +19,9 @@ DEFAULT_INC =
 #other_lib = <your_lib_path>
 
 
-#ALL_LD = -L${DEFAULT_LIB} ${other_lib}
+#ALL_LD = -L${DEFAULT_LIB} -L${other_lib}
 ALL_LD = -L${DEFAULT_LIB} 
-#ALL_INC = -I${DEFAULT_INC} ${other_inc}
+#ALL_INC = -I${DEFAULT_INC} -I${other_inc}
 ALL_INC = -I${DEFAULT_INC}
 #ALL_LIB = -lipset(libipset.so)
 ALL_LIB =
