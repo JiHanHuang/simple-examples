@@ -4,6 +4,7 @@
 # 0.配置Makefile中的lib，inc等路径，以及编译选项
 # 1.直接make(对应文件夹下的所有c文件都会编译)
 # 2.部分编译：make src='test.c aad.c'
+# 3.编译动态库(默认名为liba.so)：make lib name=libxxx.so
 #	-- by jihan
 #
 
@@ -13,14 +14,17 @@ DIR_OBJ = .
 DIR_BIN = .
 
 DEFAULT_LIB = /usr/lib64/
-#APR_INC = `pkg-config --cflags apr-1`
-#G_INC = `pkg-config --cflags glib-2.0`
-#REDIS_INC = /usr/local/include/hiredis/
+DEFAULT_INC = 
+#other_inc = <your_include_path>
+#other_lib = <your_lib_path>
 
 
+#ALL_LD = -L${DEFAULT_LIB} ${other_lib}
 ALL_LD = -L${DEFAULT_LIB} 
-ALL_INC = 
-ALL_LIB = 
+#ALL_INC = -I${DEFAULT_INC} ${other_inc}
+ALL_INC = -I${DEFAULT_INC}
+#ALL_LIB = -lipset(libipset.so)
+ALL_LIB =
 
 CXX = g++
 CC = gcc
@@ -36,9 +40,14 @@ OBJ = $(patsubst %.c,${DIR_OBJ}/%.o,${SRC})
 endif
 
 TARGET = a.out
-
 BIN_TARGET = ${DIR_BIN}/${TARGET}
 
+LIB_NAME=$(name)
+ifeq ("X${LIB_NAME}", "X")
+LIB_NAME = liba.so
+endif
+LIB_TARGET = ${DIR_BIN}/${LIB_NAME}
+LIB_SRC = $(wildcard ${DIR_SRC}/*.c)
 
 .PHONY:all
 all: ${BIN_TARGET}
@@ -48,6 +57,10 @@ ${BIN_TARGET}: ${OBJ}
 
 ${DIR_OBJ}/%.o:${DIR_SRC}/%.c
 	$(CC) $(CFLAGS)  -c $< -o $@ $(ALL_INC)
+
+.PHONY:lib
+lib: 
+	$(CC) $(CFLAGS) -fPIC -shared -o $(LIB_TARGET) $(LIB_SRC)
 
 .PHONY:clean
 clean:
@@ -76,5 +89,3 @@ maketest:
 #（3）PHONY 表示伪目标，比如clean，如果文件中
 #	  存在clean文件，那么添加了此关键字依旧能
 #	  执行rm操作。
-
-
