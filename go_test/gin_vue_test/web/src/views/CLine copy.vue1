@@ -1,0 +1,97 @@
+<template>
+ <div>
+  <div>
+   <button v-on:click="refreshCharts()">刷新</button>
+   <div class="line" id="line"></div>
+  </div>
+ </div>
+</template>
+<script>
+import echarts from 'echarts'
+import axios from 'axios'
+export default {
+  name: 'CLine',
+  computed: {
+    opt () { // option可以参照echarts官方案例
+      return {
+        title: {
+          text: '堆叠区域图'
+        },
+        tooltip: {
+        // 省略， 参数详看echarts官方案例
+        },
+        legend: {
+          data: ['邮件营销']
+        },
+        grid: {
+        // 省略
+        },
+        xAxis: [
+          {
+            // 省略
+            data: []
+          }
+        ],
+        yAxis: [
+        // 省略
+        ],
+        series: [
+          {
+            name: '邮件营销',
+            type: 'line',
+            data: []
+          }
+        ]
+      }
+    }
+  },
+  methods: {
+    async refreshCharts () {
+      const res = await axios.get('http://127.0.0.1:8000/v1/line')
+      document.write(res.data)
+      this.myChart.setOption({ // 更新数据
+        xAxis: {
+          data: res.data.legend_data
+        },
+        series: {
+          data: res.data.xAxis_data
+        }
+      })
+    }
+  },
+  mounted () {
+    this.myChart = echarts.init(document.getElementById('line'))
+    this.myChart.setOption(this.opt) // 初始化echarts
+    window.addEventListener('resize', this.myChart.resize) // 自适应
+  }
+}
+</script>
+<style>
+.line {
+  width: 400px;
+  height: 200px;
+  margin: 20px auto;
+}
+</style>
+
+
+<div id="vue_det">
+    <h1>site : {{site}}</h1>
+    <h1>url : {{url}}</h1>
+    <h1>{{details()}}</h1>
+</div>
+<script type="text/javascript">
+    var vm = new Vue({
+        el: '#vue_det',
+        data: {
+            site: "菜鸟教程",
+            url: "www.runoob.com",
+            alexa: "10000"
+        },
+        methods: {
+            details: function() {
+                return  this.site + " - 学的不仅是技术，更是梦想！";
+            }
+        }
+    })
+</script>
