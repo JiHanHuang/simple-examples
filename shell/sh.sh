@@ -1,80 +1,46 @@
 #!/bin/bash
+###
+ # @Author: JiHan
+ # @Date: 2018-02-06 14:53:12
+ # @LastEditTime: 2020-12-01 16:50:32
+ # @Description:  A shell script with parameters
+### 
 
-# JiHan 2018.02.06
-# A shell script with parameters
-# Using in SW platform
-
-OUT='./a.out'
-RUNNUM=2
-QUEUE='q_x86_expr'
-LOG=log
+OUT=''
 
 runopt (){
-    while getopts "ahf:n:o:q:l:" opts
+    while getopts "aho:" opts
     do
         case $opts in
             "a")
-                echo "This is a shell to bsub task in sw."
+                echo "This is a shell script with parameters."
                 ;;
             "h")
                 echo "
-Usage: >_< [-ahfnoql] 
-                [-f filename] [-n node_number]
-                [-o out_file] [-q sw_queue]  
-                [-l log_file]   
+Usage: >_< [-a|h] [-o out_file]
   
 Emergency help:  
  -a                   Show message  
- -h                   Help
- -f filename          A file to make 
- -n node_number       SW -n number,  
  -o out_file          Out put file
- -q sw_queue          SW -q select queue  
- -l log_file          Out put log file
 "
-                return 0
-                ;;
-            "f")
-                make SRC=$OPTARG
-                ;;
-            "n")
-                RUNNUM=$OPTARG
+                exit 0
                 ;;
             "o")
                 OUT=$OPTARG
                 ;;
-            "q")
-                QUEUE=$OPTARG
-                ;;
-            "l")
-                LOG=$OPTARG
-                ;;
             "?")
                 echo "Invalid option -$OPTARG"
+                exit 1
                 ;;
             ":")
                 echo "No argument value for option -$OPTARG"
+                exit 1
                 ;;
         esac
     done
     return $OPTIND
 }
 
+runopt "$@"
 
-if [ $# -lt 1 ];then
-    echo "no opts"
-    make clean
-    make
-    bsub -I -q ${QUEUE} -n ${RUNNUM} ${OUT} | tee ${LOG}
-else
-#    ???????
-#    optinfo=$(runopt "$@")
-#    echo "$optinfo"
-    runopt "$@"
-#   $? is the last command execution status
-    if [ $? -gt 1 ];then
-        bsub -I -q ${QUEUE} -n ${RUNNUM} ${OUT} | tee ${LOG}
-    fi
-fi
-
-
+echo "OUT:$OUT"
