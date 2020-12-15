@@ -2,7 +2,7 @@
 ###
  # @Author: JiHan
  # @Date: 2020-12-10 17:25:38
- # @LastEditTime: 2020-12-15 14:58:10
+ # @LastEditTime: 2020-12-15 15:05:16
  # @LastEditors: JiHan
  # @Description: Scan all files in a dir or dirs.
  #               Default path is ./
@@ -54,20 +54,21 @@ function scandir() {
 if [ $# -lt 1 ];then
     scandir ${lpath}
 else 
-  while [ $num -lt $# ]
-  do
-        if test -d "${tmp[$num]}"
+    while [ $num -lt $# ]
+    do
+        dir=$(cd $(dirname ${tmp[$num]}); pwd)
+        if test -d "${dir}"
         then
-            scandir ${tmp[$num]}
-        elif test -f "${tmp[$num]}"
+            scandir ${dir}
+        elif test -f "${dir}"
         then
-            files=${files}" "${tmp[$num]}
-            file_do ${tmp[$num]}
+            files=${files}" "${dir}
+            file_do ${dir}
         else
-            echo "${tmp[$num]} isn't exist, pls input a new one!!"
+            echo "${dir} isn't exist, pls input a new one!!"
         fi  
         num=$(($num+1))
-  done
+    done
 fi
 #  echo $files
 
