@@ -5,7 +5,7 @@
  # @LastEditTime: 2020-12-15 15:05:16
  # @LastEditors: JiHan
  # @Description: Scan all files in a dir or dirs.
- #               Default path is ./
+ #               Default path is scanfiles stored
  # @Usage: 
  #      1. Add processing method to file_do()
  #      2. like: 
@@ -56,7 +56,7 @@ if [ $# -lt 1 ];then
 else 
     while [ $num -lt $# ]
     do
-        dir=$(cd $(dirname ${tmp[$num]}); pwd)
+        dir=$(cd ${tmp[$num]}; pwd)
         if test -d "${dir}"
         then
             scandir ${dir}
