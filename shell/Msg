@@ -1,37 +1,55 @@
 #!/bin/bash
+#Usage:
+#source Msg
+#out 'E' "error"
+#-------or---------
+#sh Msg E "error"
 
-function msg(){
-local D=`date +%F~%T`
-if [ $# -eq 0 ];then
-	echo "${D}"
-else
-if [ "x$1" == "xDEBUG" ];then
-	echo -e "${D}\033[34m DEBUG\033[0m: -- $2 --"
-elif [ "x$1" == "xINFO" ];then
-	echo -e "${D}\033[1;34m INFO\033[0m: -- $2 --"
-elif [ "x$1" == "xWARN" ];then
-	echo -e "${D}\033[1;37m WARNING\033[0m: -- $2 --"
-elif [ "x$1" == "xERR" ];then
-	echo -e "${D}\033[1;31m ERROR\033[0m: -- $2 --"
-elif [ "x$1" == "xFATAL" ];then
-	echo -e "${D}\033[1;31;5m FATAL\033[0m: -- $2 --"
-elif [ "x$1" == "xH" ];then
-	echo -e "Usage:  Msg [OPTION] [MESSAGE]
-	OPTIONS:
-	\033[34mDEBUG\033[0m	for debug
-	\033[1;34mINFO\033[0m	for information (default)
-	\033[1;37mWARN\033[0m	for warning
-	\033[1;31mERR\033[0m	for error
-	\033[1;31;5mFATAL\033[0m	for fatal
-	H	for help
-	${D}
-"
-else
-	echo -e "${D}\033[1;34m INFO\033[0m: -- $1 --"
-fi
-fi
+#debug 4, info 3, warning 2, error 1, fatal 0
+DEBUG_LEVEL=3
+
+function out(){
+    local D=`date +%F~%T`
+    if [ $# -eq 0 ];then
+            echo "${D}"
+    else
+        if [ "x$1" == "xD" ];then
+		if [ $DEBUG_LEVEL -ge 4 ];then
+                	echo -e "${D}\033[34m DEBUG\033[0m: $2"
+		fi
+        elif [ "x$1" == "xI" ];then
+		if [ $DEBUG_LEVEL -ge 3 ];then
+	                echo -e "${D}\033[1;34m INFO\033[0m: $2"
+		fi
+        elif [ "x$1" == "xW" ];then
+		if [ $DEBUG_LEVEL -ge 2 ];then
+        	        echo -e "${D}\033[1;37m WARNING\033[0m: $2"
+		fi
+        elif [ "x$1" == "xE" ];then
+		if [ $DEBUG_LEVEL -ge 1 ];then
+                	echo -e "${D}\033[1;31m ERROR\033[0m: $2"
+		fi
+        elif [ "x$1" == "xF" ];then
+		if [ $DEBUG_LEVEL -ge 0 ];then
+	                echo -e "${D}\033[1;31;5m FATAL\033[0m: $2"
+		fi
+        elif [ "x$1" == "xH" ];then
+                echo -e "Usage:  Msg [OPTION] [MESSAGE]
+                OPTIONS:
+                \033[34mD\033[0m	for debug
+                \033[1;34mI\033[0m	for information (default)
+                \033[1;37mW\033[0m	for warning
+                \033[1;31mE\033[0m	for error
+                \033[1;31;5mF\033[0m	for fatal
+                H       for help
+
+		Now debug level is ${DEBUG_LEVEL}
+                ${D}
+        "
+        else
+                echo -e "${D}\033[1;34m INFO\033[0m: $1"
+        fi
+    fi
 }
 
-
-msg "$@"
-
+out "$@"

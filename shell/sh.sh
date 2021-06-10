@@ -29,7 +29,7 @@ Emergency help:
                 OUT=$OPTARG
                 ;;
             "?")
-                echo "Invalid option -$OPTARG"
+                echo "Invalid option -$OPT"
                 exit 1
                 ;;
             ":")
