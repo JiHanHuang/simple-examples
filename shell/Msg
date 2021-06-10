@@ -13,42 +13,52 @@ function out(){
     if [ $# -eq 0 ];then
             echo "${D}"
     else
-        if [ "x$1" == "xD" ];then
+	case "$1" in
+	'D'|'d')
 		if [ $DEBUG_LEVEL -ge 4 ];then
                 	echo -e "${D}\033[34m DEBUG\033[0m: $2"
 		fi
-        elif [ "x$1" == "xI" ];then
+		;;
+	'I'|'i')
 		if [ $DEBUG_LEVEL -ge 3 ];then
 	                echo -e "${D}\033[1;34m INFO\033[0m: $2"
 		fi
-        elif [ "x$1" == "xW" ];then
+		;;
+	'W'|'w')
 		if [ $DEBUG_LEVEL -ge 2 ];then
         	        echo -e "${D}\033[1;37m WARNING\033[0m: $2"
 		fi
-        elif [ "x$1" == "xE" ];then
+		;;
+	'E'|'e')
 		if [ $DEBUG_LEVEL -ge 1 ];then
                 	echo -e "${D}\033[1;31m ERROR\033[0m: $2"
 		fi
-        elif [ "x$1" == "xF" ];then
+		;;
+	'F'|'f')
 		if [ $DEBUG_LEVEL -ge 0 ];then
 	                echo -e "${D}\033[1;31;5m FATAL\033[0m: $2"
 		fi
-        elif [ "x$1" == "xH" ];then
+		;;
+	'H'|'h')
                 echo -e "Usage:  Msg [OPTION] [MESSAGE]
                 OPTIONS:
-                \033[34mD\033[0m	for debug
-                \033[1;34mI\033[0m	for information (default)
-                \033[1;37mW\033[0m	for warning
-                \033[1;31mE\033[0m	for error
-                \033[1;31;5mF\033[0m	for fatal
-                H       for help
+                \033[34mD|d\033[0m	for debug
+                \033[1;34mI|i\033[0m	for information (default)
+                \033[1;37mW|w\033[0m	for warning
+                \033[1;31mE|e\033[0m	for error
+                \033[1;31;5mF|f\033[0m	for fatal
+                H|h       for help
 
 		Now debug level is ${DEBUG_LEVEL}
                 ${D}
-        "
-        else
-                echo -e "${D}\033[1;34m INFO\033[0m: $1"
-        fi
+        	"
+		;;
+        *)
+		if [ $DEBUG_LEVEL -ge 3 ];then
+	                echo -e "${D}\033[1;34m INFO\033[0m: $1"
+		fi
+		;;
+	esac
     fi
 }
 
