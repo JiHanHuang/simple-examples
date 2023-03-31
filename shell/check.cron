@@ -1,0 +1,44 @@
+#!/bin/bash
+
+#
+#根据需求修改此脚本
+#执行 crontab -e
+#添加 * * * * * xxxx/check.cron
+#
+
+
+log_file=~/test/check_cron.log
+
+function do_something(){
+	d=`date`
+	echo "-------$d------" >> $log_file
+	id=`pidof lb`
+	cat /proc/$id/status | grep VmRSS >> $log_file
+}
+
+function min_do(){
+	do_something
+}
+
+function sec_do(){
+	if [ $# -eq 0 ];then
+	        echo "Please input sec_do time."
+	        exit 1
+	fi
+	sleep_time=$1
+	step=$(( 60 / $sleep_time - 1 ))
+	
+	if [ $step -le 0 ];then
+	        echo "sleep_time too large, nothing to do."
+	        exit 1
+	fi
+	
+	for i in $(seq 1 $step)
+	do
+		do_something
+		sleep $sleep_time
+	done
+}
+
+min_do
+#sec_do
