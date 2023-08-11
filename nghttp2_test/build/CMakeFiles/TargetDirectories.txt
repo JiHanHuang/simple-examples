@@ -1,2 +1,0 @@
-/root/code/Box/nghttp2_test/build/CMakeFiles/client.dir
-/root/code/Box/nghttp2_test/build/CMakeFiles/server.dir

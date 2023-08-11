@@ -1,1 +1,0 @@
-/usr/bin/cc      CMakeFiles/server.dir/server/main.c.o  -o server  -L/root/opensource/openssl-1.1.1f -rdynamic -lcrypto -lssl -lnghttp2 -levent -levent_openssl -Wl,-rpath,/root/opensource/openssl-1.1.1f 

@@ -1,1 +1,0 @@
-/usr/bin/cc      CMakeFiles/client.dir/client/main.c.o  -o client  -L/root/opensource/openssl-1.1.1f -rdynamic -lcrypto -lssl -lnghttp2 -levent -levent_openssl -lhttp_parser -Wl,-rpath,/root/opensource/openssl-1.1.1f 

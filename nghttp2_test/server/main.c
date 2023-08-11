@@ -148,10 +148,9 @@ static SSL_CTX *create_ssl_ctx(const char *key_file, const char *cert_file) {
     errx(1, "Could not create SSL/TLS context: %s",
          ERR_error_string(ERR_get_error(), NULL));
   }
-  SSL_CTX_set_options(ssl_ctx,
-                      SSL_OP_ALL | SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 |
-                          SSL_OP_NO_COMPRESSION |
-                          SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
+    SSL_CTX_set_options(ssl_ctx,
+                        SSL_OP_ALL | SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_TLSv1_1 | SSL_OP_NO_DTLSv1 |
+                            SSL_OP_NO_COMPRESSION | SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
 #if OPENSSL_VERSION_NUMBER >= 0x30000000L
   if (SSL_CTX_set1_curves_list(ssl_ctx, "P-256") != 1) {
     errx(1, "SSL_CTX_set1_curves_list failed: %s",
