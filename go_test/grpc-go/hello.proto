@@ -1,0 +1,27 @@
+/*
+前置准备：
+go get -v  google.golang.org/protobuf/cmd/protoc-gen-go@v1.26
+go get -v google.golang.org/grpc/cmd/protoc-gen-go-grpc@v1.0.1
+go get google.golang.org/grpc@v1.33.3
+执行相关文件生成：
+protoc --go_out=./ --go-grpc_out=./ ./hello.proto
+*/
+
+
+syntax = "proto3";
+
+option go_package="/proto";
+
+package grpchello;
+
+service Hello{
+    rpc Say(SayRequest) returns (SayResponse);
+}
+
+message SayRequest{
+    string Name = 1;
+}
+
+message SayResponse{
+    string Msg = 1;
+}
