@@ -1,6 +1,7 @@
 // client 端
 // 参考：https://strawberrytree.top/blog/2020/09/17/%E4%BD%BF%E7%94%A8openssl%E4%BD%BF%E7%94%A8%E5%A4%96%E9%83%A8psk%E8%BF%9B%E8%A1%8C%E6%8F%A1%E6%89%8B%EF%BC%88tls1-3%EF%BC%89/
 // g++ client-simple.cpp -o client-simple -I /usr/local/include -L /usr/local/lib64 -lssl -lcrypto
+//s_server -psk 786c69646a673277332d742a552940786761313534 -port 4433 -nocert -psk_identity Client1 -psk_identity Client1 -tls1_3
 
 #include <openssl/ossl_typ.h>
 #include <openssl/tls1.h>
@@ -12,7 +13,7 @@
 #include <openssl/ssl.h>
 #include <openssl/err.h>
 #define HOST              "0.0.0.0:4433"
-#define PSK_KEY           "123456781234567812345678123456781234567812345678123456781234567812345678123456781234567812345678"
+#define PSK_KEY           "786c69646a673277332d742a552940786761313534"
 #define PSK_UTF8_KEY      "xlidjg2w3-t*U)@xga154"
 #define PSK_ID            "Client1"
 #define AES256SHA384      1
@@ -21,7 +22,7 @@
 // #define CURR_CIPHERSUITES AES128SHA256
 #define SERVER_NAME "ssl.test.com"
 
-#define USEING_PSK
+// #define USEING_PSK
 
 // #define CURR_CIPHERSUITES AES128SHA256
 
@@ -242,18 +243,32 @@ void showSSLCiphers(SSL *ssl) {
                                    "TLS_AES_128_GCM_SHA256"
 */
 
-const char default_cipher_tlsv1_2_list[] = "ECDHE-ECDSA-AES128-GCM-SHA256:"
-                                           "DHE-RSA-AES128-GCM-SHA256:"
-                                           "ECDHE-ECDSA-AES256-GCM-SHA384:"
-                                           "ECDHE-RSA-AES256-GCM-SHA384:"
-                                           "DHE-PSK-AES128-GCM-SHA256:"
-                                           "DHE-PSK-AES256-GCM-SHA384:"
-                                           "PSK-AES128-GCM-SHA256:"
-                                           "PSK-AES256-GCM-SHA384:"
-                                           "PSK-CHACHA20-POLY1305:"
-                                           "PSK-AES128-CBC-SHA256:"       // 这个组件属于TLSv1的版本，目前禁用的tlsv1
-                                           "ECDHE-PSK-AES128-GCM-SHA256:" // 这个组件在openssl 1.1.1f里没有
-                                           "ECDHE-PSK-AES256-GCM-SHA384"; // 这个组件在openssl 1.1.1f里没有
+const char default_cipher_tlsv1_2_list[] =
+    // 下面全是按照3GPP TS 33.210第6.2节建议添加
+    "ECDHE-ECDSA-AES128-GCM-SHA256:"
+    "DHE-RSA-AES128-GCM-SHA256:"
+    "ECDHE-ECDSA-AES256-GCM-SHA384:"
+    "ECDHE-RSA-AES256-GCM-SHA384:"
+    "DHE-PSK-AES128-GCM-SHA256:"
+    "DHE-PSK-AES256-GCM-SHA384:"
+
+    // 默认配置下符合的3GPP TS 33.210第6.2节要求
+    "DHE-RSA-AES256-GCM-SHA384:"
+    "ECDHE-ECDSA-CHACHA20-POLY1305-SHA256:"
+    "ECDHE-RSA-CHACHA20-POLY1305-SHA256:"
+    "DHE-RSA-CHACHA20-POLY1305-SHA256:"
+    "ECDHE-RSA-AES128-GCM-SHA256:"
+
+    // psk-系列的套件，是按照5gc对接iwf需求增加的
+    "PSK-AES128-GCM-SHA256:"
+    "PSK-AES256-GCM-SHA384:"
+    "PSK-CHACHA20-POLY1305:"
+    // PSK-AES128-CBC-SHA256属于TLSv1的版本，目前禁用的tlsv1，如果服务端支持此套件，还是能协商成功
+    "PSK-AES128-CBC-SHA256:"
+
+    // ECDHE-PSK-AESxxx-GCM-SHAxxx(最后两个)在openssl 1.1.1f里没有
+    "ECDHE-PSK-AES128-GCM-SHA256:" 
+    "ECDHE-PSK-AES256-GCM-SHA384"; 
 
 void configure_context(SSL_CTX *ctx) {
     SSL_CTX_set_options(
@@ -265,9 +280,8 @@ void configure_context(SSL_CTX *ctx) {
             //   SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
             SSL_OP_NO_COMPRESSION | SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
     if (SSL_CTX_set_cipher_list(
-            // ctx, "ALL:!COMPLEMENTOFDEFAULT:!eNULL:!SHA") != 1) {
-            ctx, default_cipher_tlsv1_2_list)
-        != 1) {
+            // ctx, "ALL:!COMPLEMENTOFDEFAULT:!eNULL:!SHA")        != 1) {
+        ctx, default_cipher_tlsv1_2_list) != 1) {
         report_error("Set cipher list failed");
         return;
     }
@@ -280,22 +294,24 @@ void configure_context(SSL_CTX *ctx) {
     // SSL_CTX_set_tlsext_status_cb(ctx, cert_status_cb);
 
     // TLS1_3_VERSION
-    if (SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION) == 0) {
-        report_error("Set ssl min version failed");
-        return;
-    }
-    if (SSL_CTX_set_max_proto_version(ctx, TLS1_2_VERSION) == 0) {
-        report_error("Set ssl max version failed");
-        return;
-    }
+    // if (SSL_CTX_set_min_proto_version(ctx, TLS1_2_VERSION) == 0) {
+    //     report_error("Set ssl min version failed");
+    //     return;
+    // }
+    // if (SSL_CTX_set_max_proto_version(ctx, TLS1_2_VERSION) == 0) {
+    //     report_error("Set ssl max version failed");
+    //     return;
+    // }
 #ifndef USEING_PSK
     // if (SSL_CTX_use_PrivateKey_file(ctx, "./server.key", SSL_FILETYPE_PEM) != 1)
-    if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1) {
+    if (SSL_CTX_use_PrivateKey_file(ctx, "/root/tmp/client.key", SSL_FILETYPE_PEM) != 1) {
         report_error("Could not read private key file");
         return;
     }
     // if (SSL_CTX_use_certificate_file(ctx, "./server.crt", SSL_FILETYPE_PEM) != 1)
-    if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1) {
+    if (SSL_CTX_use_certificate_file(ctx, "/root/tmp/client.crt", SSL_FILETYPE_PEM) != 1) {
         // if (SSL_CTX_use_certificate_chain_file(ssl_ctx, cert_file) != 1) {
         report_error("Could not read certificate file");
         return;
@@ -305,6 +321,7 @@ void configure_context(SSL_CTX *ctx) {
         report_error("Check private key failed");
         return;
     }
+    printf("Read client cert and key success.\n");
 #else
     // determine ciphersuite to use
     // if (CURR_CIPHERSUITES == AES256SHA384) {
@@ -458,9 +475,9 @@ int main(int argc, char **argv) {
     printf("Using PSK\n");
     // 必须调用此函数，协商的报文才会携带PSK相关函数，并且兼容tls1.3，和SSL_CTX_set_psk_use_session_callback二选一
     SSL_CTX_set_psk_client_callback(ctx, psk_client_cb);
-    //主要是tls1.3后的psk相关函数，如果只支持tls1.3，则只用此函数
-    // SSL_CTX_set_psk_use_session_callback(ctx, psk_use_session_cb);
-    // SSL_CTX_set_psk_use_session_callback(ctx, psk_use_session_utf8_cb);
+    // 主要是tls1.3后的psk相关函数，如果只支持tls1.3，则只用此函数
+    //  SSL_CTX_set_psk_use_session_callback(ctx, psk_use_session_cb);
+    //  SSL_CTX_set_psk_use_session_callback(ctx, psk_use_session_utf8_cb);
 #else
     printf("Using CERT\n");
     SSL_CTX_set_tlsext_status_cb(ctx, ocsp_resp_cb); // OCSP
@@ -502,6 +519,7 @@ int main(int argc, char **argv) {
         return -2;
     }
 #ifndef USEING_PSK
+    // 获取校验结果，实际上在握手阶段就会执行校验
     long verify_result = SSL_get_verify_result(ssl);
     printf("Verify return code: %ld (%s)\n", verify_result,
            X509_verify_cert_error_string(verify_result));

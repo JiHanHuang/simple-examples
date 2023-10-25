@@ -12,9 +12,7 @@
 #include <string.h>
 #include <sys/socket.h>
 #include <unistd.h>
-#define PSK_KEY                                                                  \
-    "12345678123456781234567812345678123456781234567812345678123456781234567812" \
-    "3456781234567812345678"
+#define PSK_KEY    "786c69646a673277332d742a552940786761313534"
 #define PSK_UTF8_KEY      "xlidjg2w3-t*U)@xga154"
 #define PSK_ID            "Client1"
 #define AES256SHA384      1
@@ -22,7 +20,7 @@
 #define CURR_CIPHERSUITES AES256SHA384
 // #define CURR_CIPHERSUITES AES128SHA256
 
-#define USEING_PSK
+// #define USEING_PSK
 
 void report_error(const char *e_log) {
     perror(e_log);
@@ -88,7 +86,7 @@ static unsigned int psk_server_cb(SSL *ssl, const char *identity,
 
     memcpy(psk, key_utf8, key_len);
 
-    printf("xxxxxxxxxxxxx psk_server_cb end:%ld\n",key_len);
+    printf("xxxxxxxxxxxxx psk_server_cb end:%ld\n", key_len);
     return key_len;
 }
 
@@ -404,22 +402,32 @@ SSL_CTX *create_context() {
                                    "TLS_AES_128_GCM_SHA256"
 */
 
-const char default_cipher_tlsv1_2_list[] = "ECDHE-ECDSA-AES128-GCM-SHA256:"
-                                           "DHE-RSA-AES128-GCM-SHA256:"
-                                           "ECDHE-ECDSA-AES256-GCM-SHA384:"
-                                           "ECDHE-RSA-AES256-GCM-SHA384:"
-                                           "DHE-PSK-AES128-GCM-SHA256:"
-                                           "DHE-PSK-AES256-GCM-SHA384:"
-                                           "PSK-AES128-GCM-SHA256:"
-                                           "PSK-AES256-GCM-SHA384:"
-                                           "PSK-CHACHA20-POLY1305:"
-                                           // 这个组件属于TLSv1的版本，目前禁用的tlsv1。
-                                           // 虽然SSL_get1_supported_ciphers里没有这个密码套件，
-                                           // 但是这里设置了后，还是能用此套件协商成功
-                                           "PSK-AES128-CBC-SHA256:"
-                                           // 下面两个组件在openssl 1.1.1f里没有，设置不会生效
-                                           "ECDHE-PSK-AES128-GCM-SHA256:"
-                                           "ECDHE-PSK-AES256-GCM-SHA384";
+const char default_cipher_tlsv1_2_list[] =
+    // 下面全是按照3GPP TS 33.210第6.2节建议添加
+    "ECDHE-ECDSA-AES128-GCM-SHA256:"
+    "DHE-RSA-AES128-GCM-SHA256:"
+    "ECDHE-ECDSA-AES256-GCM-SHA384:"
+    "ECDHE-RSA-AES256-GCM-SHA384:"
+    "DHE-PSK-AES128-GCM-SHA256:"
+    "DHE-PSK-AES256-GCM-SHA384:"
+
+    // 默认配置下符合的3GPP TS 33.210第6.2节要求
+    "DHE-RSA-AES256-GCM-SHA384:"
+    "ECDHE-ECDSA-CHACHA20-POLY1305-SHA256:"
+    "ECDHE-RSA-CHACHA20-POLY1305-SHA256:"
+    "DHE-RSA-CHACHA20-POLY1305-SHA256:"
+    "ECDHE-RSA-AES128-GCM-SHA256:"
+
+    // psk-系列的套件，是按照5gc对接iwf需求增加的
+    "PSK-AES128-GCM-SHA256:"
+    "PSK-AES256-GCM-SHA384:"
+    "PSK-CHACHA20-POLY1305:"
+    // PSK-AES128-CBC-SHA256属于TLSv1的版本，目前禁用的tlsv1，如果服务端支持此套件，还是能协商成功
+    "PSK-AES128-CBC-SHA256:"
+
+    // ECDHE-PSK-AESxxx-GCM-SHAxxx(最后两个)在openssl 1.1.1f里没有
+    "ECDHE-PSK-AES128-GCM-SHA256:"
+    "ECDHE-PSK-AES256-GCM-SHA384";
 
 void configure_context(SSL_CTX *ctx) {
     SSL_CTX_set_options(
@@ -430,13 +438,13 @@ void configure_context(SSL_CTX *ctx) {
             // 用1.2
             //   SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
             SSL_OP_NO_COMPRESSION | SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
-    // if (SSL_CTX_set_cipher_list(
-    //         // ctx, "PSK-AES128-GCM-SHA256") != 1) {
-    //         ctx, default_cipher_tlsv1_2_list)
-    //     != 1) {
-    //     report_error("Set cipher list failed");
-    //     return;
-    // }
+    if (SSL_CTX_set_cipher_list(
+            // ctx, "PSK-AES128-GCM-SHA256") != 1) {
+            ctx, default_cipher_tlsv1_2_list)
+        != 1) {
+        report_error("Set cipher list failed");
+        return;
+    }
     // if (SSL_CTX_set_ciphersuites(
     //         // ctx, "ALL:!COMPLEMENTOFDEFAULT:!eNULL:!SHA") != 1) {
     //         ctx, TLS_DEFAULT_CIPHERSUITES) != 1) {
@@ -657,9 +665,9 @@ int main(int argc, char **argv) {
     printf("Using PSK\n");
     // 必须调用此函数，协商的报文才会携带PSK相关函数，并且兼容tls1.3，和SSL_CTX_set_psk_find_session_callback二选一
     SSL_CTX_set_psk_server_callback(ctx, psk_server_cb);
-    //主要是tls1.3后的psk相关函数，如果只支持tls1.3，则只用此函数
-    // SSL_CTX_set_psk_find_session_callback(ctx, psk_find_session_cb);
-    // SSL_CTX_set_tlsext_servername_callback(ctx, serverNameCallback);//SNI
+    // 主要是tls1.3后的psk相关函数，如果只支持tls1.3，则只用此函数
+    //  SSL_CTX_set_psk_find_session_callback(ctx, psk_find_session_cb);
+    //  SSL_CTX_set_tlsext_servername_callback(ctx, serverNameCallback);//SNI
 #else
     printf("Using CERT\n");
     SSL_CTX_set_tlsext_status_cb(ctx, cert_status_cb);               // OCSP
@@ -667,12 +675,13 @@ int main(int argc, char **argv) {
 
     // 双向验证
     // SSL_VERIFY_PEER---要求对证书进行认证，没有证书也会放行
-    // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---要求客户端需要提供证书，但验证发现单独使用没有证书也会放行
+    // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---要求客户端需要提供证书，如果客户端不提供证书，握手失败
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
                        NULL);
     // 设置信任根证书
     // if (SSL_CTX_load_verify_locations(ctx, "server.crt",NULL)<=0){
-    if (SSL_CTX_load_verify_locations(ctx, "iwf_ca.crt", NULL) <= 0) {
+    // if (SSL_CTX_load_verify_locations(ctx, "iwf_ca.crt", NULL) <= 0) {
+    if (SSL_CTX_load_verify_locations(ctx, "/root/tmp/client_ca.crt", NULL) <= 0) {
         printf("unable to load verify crt.\n");
         return -2;
     }
@@ -725,7 +734,7 @@ int main(int argc, char **argv) {
             ERR_print_errors_fp(stderr);
         } else {
 #ifndef USEING_PSK
-            // 校验客户端证书
+            // 获取校验结果，实际上在握手阶段就会执行校验
             long verify_result = SSL_get_verify_result(ssl);
             printf("Verify return code: %ld (%s)\n", verify_result,
                    X509_verify_cert_error_string(verify_result));
