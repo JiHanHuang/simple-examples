@@ -24,6 +24,8 @@ sleep 2
 echo "$PWD" | sudo -S killall tcpdump
 killall server
 
+exit
+
 sleep 1
 rm /mnt/hgfs/vm_share/tls_test.pcap -f
 if [ $? -eq 0 ];then

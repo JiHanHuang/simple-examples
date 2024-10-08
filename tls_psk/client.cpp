@@ -275,9 +275,9 @@ void configure_context(SSL_CTX *ctx) {
         ctx,
         SSL_OP_ALL | SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_DTLSv1 |
             // 用1.3
-            SSL_OP_NO_TLSv1_1 |
+            // SSL_OP_NO_TLSv1_1 |
             // 用1.2
-            //   SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
+              SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
             SSL_OP_NO_COMPRESSION | SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
     if (SSL_CTX_set_cipher_list(
             // ctx, "ALL:!COMPLEMENTOFDEFAULT:!eNULL:!SHA")        != 1) {
@@ -303,15 +303,15 @@ void configure_context(SSL_CTX *ctx) {
     //     return;
     // }
 #ifndef USEING_PSK
-    // if (SSL_CTX_use_PrivateKey_file(ctx, "./server.key", SSL_FILETYPE_PEM) != 1)
-    // if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1) {
-    if (SSL_CTX_use_PrivateKey_file(ctx, "/root/tmp/client.key", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1){
+    if (SSL_CTX_use_PrivateKey_file(ctx, "./5gc.key", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_PrivateKey_file(ctx, "/root/tmp/client.key", SSL_FILETYPE_PEM) != 1) {
         report_error("Could not read private key file");
         return;
     }
-    // if (SSL_CTX_use_certificate_file(ctx, "./server.crt", SSL_FILETYPE_PEM) != 1)
-    // if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1) {
-    if (SSL_CTX_use_certificate_file(ctx, "/root/tmp/client.crt", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1){
+    if (SSL_CTX_use_certificate_file(ctx, "./5gc.crt", SSL_FILETYPE_PEM) != 1) {
+    // if (SSL_CTX_use_certificate_file(ctx, "/root/tmp/client.crt", SSL_FILETYPE_PEM) != 1) {
         // if (SSL_CTX_use_certificate_chain_file(ssl_ctx, cert_file) != 1) {
         report_error("Could not read certificate file");
         return;
@@ -483,8 +483,8 @@ int main(int argc, char **argv) {
     SSL_CTX_set_tlsext_status_cb(ctx, ocsp_resp_cb); // OCSP
     // SSL_VERIFY_NONE
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER, NULL); // 证书校验
-    if (SSL_CTX_load_verify_locations(ctx, "5gc_ca.crt", NULL) <= 0) {
-        // if (SSL_CTX_load_verify_locations(ctx, "iwf_ca.crt",NULL)<=0){
+    // if (SSL_CTX_load_verify_locations(ctx, "5gc_ca.crt", NULL) <= 0) {
+        if (SSL_CTX_load_verify_locations(ctx, "iwf_ca.crt",NULL)<=0){
         printf("unable to load verify crt.\n");
         return -2;
     }

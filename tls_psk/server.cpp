@@ -434,9 +434,9 @@ void configure_context(SSL_CTX *ctx) {
         ctx,
         SSL_OP_ALL | SSL_OP_NO_SSLv2 | SSL_OP_NO_SSLv3 | SSL_OP_NO_DTLSv1 |
             // 用1.3
-            SSL_OP_NO_TLSv1_1 |
+            // SSL_OP_NO_TLSv1_1 |
             // 用1.2
-            //   SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
+              SSL_OP_NO_TLSv1_1 |SSL_OP_NO_TLSv1_3 |
             SSL_OP_NO_COMPRESSION | SSL_OP_NO_SESSION_RESUMPTION_ON_RENEGOTIATION);
     if (SSL_CTX_set_cipher_list(
             // ctx, "PSK-AES128-GCM-SHA256") != 1) {
@@ -464,14 +464,14 @@ void configure_context(SSL_CTX *ctx) {
     //  }
 
 #ifndef USEING_PSK
-    if (SSL_CTX_use_PrivateKey_file(ctx, "./5gc.key", SSL_FILETYPE_PEM) != 1)
-    // if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1)
+    // if (SSL_CTX_use_PrivateKey_file(ctx, "./5gc.key", SSL_FILETYPE_PEM) != 1)
+    if (SSL_CTX_use_PrivateKey_file(ctx, "./iwf.key", SSL_FILETYPE_PEM) != 1)
     {
         report_error("Could not read private key file");
         return;
     }
-    if (SSL_CTX_use_certificate_file(ctx, "./5gc.crt", SSL_FILETYPE_PEM) != 1)
-    // if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1)
+    // if (SSL_CTX_use_certificate_file(ctx, "./5gc.crt", SSL_FILETYPE_PEM) != 1)
+    if (SSL_CTX_use_certificate_file(ctx, "./iwf.crt", SSL_FILETYPE_PEM) != 1)
     {
         // if (SSL_CTX_use_certificate_chain_file(ssl_ctx, cert_file) != 1) {
         report_error("Could not read certificate file");
@@ -677,11 +677,12 @@ int main(int argc, char **argv) {
     // SSL_VERIFY_PEER---要求对证书进行认证，没有证书也会放行
     // SSL_VERIFY_FAIL_IF_NO_PEER_CERT---要求客户端需要提供证书，如果客户端不提供证书，握手失败
     SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER | SSL_VERIFY_FAIL_IF_NO_PEER_CERT,
+    // SSL_CTX_set_verify(ctx, SSL_VERIFY_PEER ,
                        NULL);
     // 设置信任根证书
-    // if (SSL_CTX_load_verify_locations(ctx, "server.crt",NULL)<=0){
+    if (SSL_CTX_load_verify_locations(ctx, "5gc_ca.crt",NULL)<=0){
     // if (SSL_CTX_load_verify_locations(ctx, "iwf_ca.crt", NULL) <= 0) {
-    if (SSL_CTX_load_verify_locations(ctx, "/root/tmp/client_ca.crt", NULL) <= 0) {
+    // if (SSL_CTX_load_verify_locations(ctx, "/root/tmp/client_ca.crt", NULL) <= 0) {
         printf("unable to load verify crt.\n");
         return -2;
     }
