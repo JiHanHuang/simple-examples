@@ -21,17 +21,22 @@ set(THIRD_LIBS_PATH ${ROOT_PATH}/third_lib)
 # message("PUB_PATH is ${PUB_PATH}")
 # message("THIRD_LIBS_PATH is ${THIRD_LIBS_PATH}")
 
+# 添加头文件路径
 include_directories(
                     ${ROOT_PATH}
                     ${PUB_PATH}/include
                     ${THIRD_LIBS_PATH}/libplatthirdparty/include/list)
 
+# 添加库路径
+link_directories(${THIRD_LIBS_PATH}/libplatthirdparty/lib)
 
 # SET(SOURCE_FILES  ${ROOT_PATH}/print.c)
 aux_source_directory(${ROOT_PATH} SOURCE_FILES)
 
 
 add_executable(exe_only ${SOURCE_FILES})
+
+# 链接第三方库
 # target_link_libraries(exe_only share)
 
 install(TARGETS exe_only DESTINATION ${ROOT_PATH}/bin)

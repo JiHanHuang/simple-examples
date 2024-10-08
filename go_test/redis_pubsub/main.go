@@ -7,7 +7,7 @@ import (
 	"strings"
 	"time"
 
-	redis "github.com/go-redis/redis/v8"
+	"github.com/go-redis/redis/v8"
 )
 
 const RDB_CFG_DB = 0
@@ -15,7 +15,9 @@ const localIP = "192.168.192.131:6379"
 const localPWD = "Gsta@1234"
 const dupfIP1 = "172.29.3.102:6379"
 const dupfIP2 = "172.29.3.103:6379"
-const dupfPWD = "Gsta@1234"
+
+// const dupfPWD = "Gsta@1234"
+const dupfPWD = "zdx5GC18"
 
 func main() {
 	// 创建连接池
@@ -28,14 +30,14 @@ func main() {
 	shutdown, cancel := context.WithCancel(context.Background())
 
 	// 订阅一个频道
-	// go subscribe(shutdown, pool, "MSG_TRACK_TASK|*")
-	subscribe(shutdown, pool, "MSG_TRACK_TASK|*")
+	go subscribe(shutdown, pool, "MSG_TRACK_TASK|*")
+	// subscribe(shutdown, pool, "MSG_TRACK_TASK|*")
 	// subscribe2(shutdown, pool, "MSG_TRACK_TASK|*")
 	fmt.Println("sub success")
 	time.Sleep(time.Second)
 	publish(shutdown, pool, "MSG_TRACK_TASK|", "jihan-test")
 	fmt.Println("pub data")
-	time.Sleep(time.Second * 100)
+	time.Sleep(time.Second * 1)
 	cancel()
 	time.Sleep(time.Second)
 	fmt.Println("Over")
@@ -62,7 +64,7 @@ func subscribe(ctx context.Context, pool *redis.Client, channel string) {
 			// 执行一些任务
 			keys := strings.Split(data.Channel, ":")
 			if len(keys) < 2 {
-				fmt.Println("receive unkown channel:", err)
+				fmt.Println("receive unknown channel:", err)
 				return
 			}
 			switch strings.ToLower(data.Payload) {
@@ -75,11 +77,11 @@ func subscribe(ctx context.Context, pool *redis.Client, channel string) {
 				}
 				fmt.Println("hset data:", fileds)
 			default:
-				break
+				fmt.Println("unknown payload type:", data.Payload)
 			}
 
 		default:
-			fmt.Println("receive type error:", v)
+			fmt.Println("unknown receive type:", v)
 			return
 		}
 	}
@@ -89,12 +91,6 @@ func subscribe(ctx context.Context, pool *redis.Client, channel string) {
 func subscribe2(ctx context.Context, pool *redis.Client, channel string) {
 
 	psc := pool.PSubscribe(ctx, fmt.Sprintf("__keyspace@%d__:%s", RDB_CFG_DB, channel))
-	defer psc.Close()
-	v, err := psc.Receive(ctx)
-	if err != nil {
-		fmt.Println("receive error:", err)
-		return
-	}
 	ch := psc.Channel()
 
 	go func() {
@@ -111,7 +107,7 @@ func subscribe2(ctx context.Context, pool *redis.Client, channel string) {
 				// 执行一些任务
 				keys := strings.Split(data.Channel, ":")
 				if len(keys) < 2 {
-					fmt.Println("receive unkown channel:", err)
+					fmt.Println("receive unknown channel:", data.Channel)
 					return
 				}
 				switch strings.ToLower(data.Payload) {
@@ -124,11 +120,8 @@ func subscribe2(ctx context.Context, pool *redis.Client, channel string) {
 					}
 					fmt.Println("hset data:", fileds)
 				default:
-					break
+					fmt.Println("unknown payload type:", data.Payload)
 				}
-			default:
-				fmt.Println("receive type error:", v)
-				return
 			}
 		}
 	}()
