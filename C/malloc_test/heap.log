@@ -1,0 +1,527 @@
+堆内存分配成功:0x55fb038a7260
+55fb038a7000-55fb038c8000 rw-p 00000000 00:00 0                          [heap]
+Size:                132 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  12 kB
+Pss:                  12 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        12 kB
+Referenced:           12 kB
+Anonymous:            12 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+0 内存分配成功:0x55fb038c8290
+55fb038a7000-55fb038e9000 rw-p 00000000 00:00 0                          [heap]
+Size:                264 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  20 kB
+Pss:                  20 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        20 kB
+Referenced:           20 kB
+Anonymous:            20 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+1 内存分配成功:0x55fb038e7ea0
+55fb038a7000-55fb03928000 rw-p 00000000 00:00 0                          [heap]
+Size:                516 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  24 kB
+Pss:                  24 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        24 kB
+Referenced:           24 kB
+Anonymous:            24 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+2 内存分配成功:0x55fb03907ab0
+55fb038a7000-55fb03928000 rw-p 00000000 00:00 0                          [heap]
+Size:                516 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  28 kB
+Pss:                  28 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        28 kB
+Referenced:           28 kB
+Anonymous:            28 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+3 内存分配成功:0x55fb039276c0
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  32 kB
+Pss:                  32 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        32 kB
+Referenced:           32 kB
+Anonymous:            32 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+4 内存分配成功:0x55fb039472d0
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+5 内存分配成功:0x7f2872f44010
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+6 内存分配成功:0x7f2872f03010
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+7 内存分配成功:0x7f2872ec2010
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+8 内存分配成功:0x7f2872e81010
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+9 内存分配成功:0x7f2872e40010
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+---------------
+<malloc version="1">
+<heap nr="0">
+<sizes>
+</sizes>
+<total type="fast" count="0" size="0"/>
+<total type="rest" count="0" size="0"/>
+<system type="current" size="790528"/>
+<system type="max" size="790528"/>
+<aspace type="total" size="790528"/>
+<aspace type="mprotect" size="790528"/>
+</heap>
+<total type="fast" count="0" size="0"/>
+<total type="rest" count="0" size="0"/>
+<total type="mmap" count="5" size="1331200"/>
+<system type="current" size="790528"/>
+<system type="max" size="790528"/>
+<aspace type="total" size="790528"/>
+<aspace type="mprotect" size="790528"/>
+</malloc>
+---------------
+9 内存释放成功:0x7f2872e40010, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+8 内存释放成功:0x7f2872e81010, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+7 内存释放成功:0x7f2872ec2010, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+6 内存释放成功:0x7f2872f03010, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+5 内存释放成功:0x7f2872f44010, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+4 内存释放成功:0x55fb039472d0, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+3 内存释放成功:0x55fb039276c0, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+2 内存释放成功:0x55fb03907ab0, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+1 内存释放成功:0x55fb038e7ea0, trim:-1
+55fb038a7000-55fb03968000 rw-p 00000000 00:00 0                          [heap]
+Size:                772 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  36 kB
+Pss:                  36 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        36 kB
+Referenced:           36 kB
+Anonymous:            36 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+0 内存释放成功:0x55fb038c8290, trim:-1
+55fb038a7000-55fb038e9000 rw-p 00000000 00:00 0                          [heap]
+Size:                264 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  20 kB
+Pss:                  20 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        20 kB
+Referenced:           20 kB
+Anonymous:            20 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+55fb038a7000-55fb038e9000 rw-p 00000000 00:00 0                          [heap]
+Size:                264 kB
+KernelPageSize:        4 kB
+MMUPageSize:           4 kB
+Rss:                  20 kB
+Pss:                  20 kB
+Shared_Clean:          0 kB
+Shared_Dirty:          0 kB
+Private_Clean:         0 kB
+Private_Dirty:        20 kB
+Referenced:           20 kB
+Anonymous:            20 kB
+LazyFree:              0 kB
+AnonHugePages:         0 kB
+ShmemPmdMapped:        0 kB
+Shared_Hugetlb:        0 kB
+Private_Hugetlb:       0 kB
+Swap:                  0 kB
+SwapPss:               0 kB
+Locked:                0 kB
+ProtectionKey:         0
+VmFlags: rd wr mr mw me ac sd 
+内存释放成功

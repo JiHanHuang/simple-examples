@@ -1,0 +1,8 @@
+#移除哪些没用的玩意儿，都用默认的LLVM
+BasedOnStyle: LLVM
+#缩进宽度
+IndentWidth: 4
+# 在三元运算符前换行
+BreakBeforeTernaryOperators: false
+# 允许重新排版注释
+ReflowComments: false
