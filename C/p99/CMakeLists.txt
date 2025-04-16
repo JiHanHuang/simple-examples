@@ -30,11 +30,16 @@ include_directories(
 # 添加库路径
 link_directories(${THIRD_LIBS_PATH}/libplatthirdparty/lib)
 
-# SET(SOURCE_FILES  ${ROOT_PATH}/print.c)
-aux_source_directory(${ROOT_PATH} SOURCE_FILES)
+SET(TRACKER_FILES  ${ROOT_PATH}/tracker.c)
+add_executable(p99 ${ROOT_PATH}/main.c ${TRACKER_FILES})
 
+# 三种代码，最后还是选择最原始的，尴尬
+add_executable(tracker ${ROOT_PATH}/tracker_test.c ${ROOT_PATH}/tracker.c)
+add_executable(tracker2 ${ROOT_PATH}/tracker_test.c ${ROOT_PATH}/tracker2.c)
+add_executable(tracker3 ${ROOT_PATH}/tracker_test.c ${ROOT_PATH}/tracker3.c)
 
-add_executable(p99 ${SOURCE_FILES})
+#aux_source_directory(${ROOT_PATH} SOURCE_FILES)
+#add_executable(p99 ${SOURCE_FILES})
 
 # 链接第三方库
 target_link_libraries(p99 event hiredis)

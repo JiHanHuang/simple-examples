@@ -7,5 +7,6 @@ void tracker_init(double *percentiles, int count);
 void tracker_insert(long value);
 long tracker_query(double quantile);
 void tracker_print_results();
+void tracker_free();
 
 #endif

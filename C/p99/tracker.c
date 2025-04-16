@@ -1,41 +1,29 @@
 /**
- * @file tracker.c 用于计算自定义百分位数的延迟
+ * @file tracker.c 采用最精确的方式进行延迟跟踪，缺点是占用内存大。只在tracker_query排序，因此性能没问题。
  * @author huangjiahao (huangjh110@chinatelecom.cn)
  * @brief 
  * @version 0.1
- * @date 2025-04-14
+ * @date 2025-04-16
  * 
  * @copyright Copyright (c) 2025 中电信智能网络科技有限公司
  * 
  */
-
-#include <limits.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 #include <time.h>
+#include <limits.h>
 
-#define MAX_TRACKED 16
-#define OBSERVE_SIZE 4
+#define DEFAULT_VALUES_NUM 1024
 
-typedef struct {
-    double quantile; // 目标分位数（例如 0.5 表示中位数）
-    long estimate;   // 当前分位数的估计值
-    long left_candidates
-        [OBSERVE_SIZE]; // 左侧候选值数组，用于计算分位数，计算平均值
-    long right_candidates
-        [OBSERVE_SIZE]; // 右侧候选值数组，用于计算分位数，计算平均值
-    int left_index;  // 左侧候选值数组的当前索引
-    int right_index; // 右侧候选值数组的当前索引
-    int count_left;  // 左侧候选值的计数
-    int count_right; // 右侧候选值的计数
-} percentile_track_t;
-
-typedef struct {
-    percentile_track_t tracks[MAX_TRACKED]; // 跟踪多个分位数的数组
-    int track_count; // 当前正在跟踪的分位数数量
-    int total_count; // 总的样本数量
-    long global_min; // 全局最小值
-    long global_max; // 全局最大值
-} latency_tracker_t;
-static latency_tracker_t g_tracker;
+static double *percentiles = NULL; // 存储百分比值
+static int percentile_count = 0;  // 百分比值的数量
+static long *values = NULL;      // 存储插入的值
+static int value_count = 0;      // 当前值的数量
+static int value_capacity = DEFAULT_VALUES_NUM;   // 当前数组容量
+static bool is_sorted = true;              // 标记数组是否已排序
+static long max_value = LONG_MIN;          // 最大值
+static long min_value = LONG_MAX;          // 最小值
 
 long current_time_us() {
     struct timespec ts;
@@ -43,80 +31,106 @@ long current_time_us() {
     return (long)ts.tv_sec * 1000000L + ts.tv_nsec / 1000;
 }
 
-void tracker_init(double *percentiles, int count) {
-    latency_tracker_t *tracker = &g_tracker;
-    tracker->track_count = count;
-    tracker->total_count = 0;
-    tracker->global_min = LONG_MAX;
-    tracker->global_max = 0;
-
-    for (int i = 0; i < count; ++i) {
-        tracker->tracks[i].quantile = percentiles[i];
-        tracker->tracks[i].estimate = 0;
-        tracker->tracks[i].left_index = 0;
-        tracker->tracks[i].right_index = 0;
-        tracker->tracks[i].count_left = 0;
-        tracker->tracks[i].count_right = 0;
-        memset(tracker->tracks[i].left_candidates, 0,
-               sizeof(tracker->tracks[i].left_candidates));
-        memset(tracker->tracks[i].right_candidates, 0,
-               sizeof(tracker->tracks[i].right_candidates));
+// 初始化函数
+void tracker_init(double *input_percentiles, int count) {
+    percentiles = (double *)malloc(count * sizeof(double));
+    if (percentiles == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for percentiles.\n");
+        exit(EXIT_FAILURE);
     }
+
+    for (int i = 0; i < count; i++) {
+        percentiles[i] = input_percentiles[i];
+    }
+    percentile_count = count;
+
+    values = (long *)malloc(value_capacity * sizeof(long));
+    if (values == NULL) {
+        fprintf(stderr, "Error: Failed to allocate memory for values.\n");
+        free(percentiles); // 确保释放已分配的内存
+        exit(EXIT_FAILURE);
+    }
+    value_count = 0;
+    max_value = LONG_MIN;
+    min_value = LONG_MAX;
 }
 
-/**
- * 更新全局延迟跟踪器的统计数据（如最小值、最大值、总计数）。
- * 根据插入的值更新每个分位点（percentile）的估计值。估值区的数据不保序
- */
+// 插入值（不保持有序）
 void tracker_insert(long value) {
-    latency_tracker_t *tracker = &g_tracker;
-    tracker->total_count++;
-
-    if (value < tracker->global_min)
-        tracker->global_min = value;
-    if (value > tracker->global_max)
-        tracker->global_max = value;
-
-    for (int i = 0; i < tracker->track_count; ++i) {
-        percentile_track_t *pt = &tracker->tracks[i];
-
-        if (value < pt->estimate) {
-            pt->left_candidates[pt->left_index++ % OBSERVE_SIZE] = value;
-            pt->count_left++;
-        } else if (value > pt->estimate) {
-            pt->right_candidates[pt->right_index++ % OBSERVE_SIZE] = value;
-            pt->count_right++;
+    if (value_count == value_capacity) {
+        // 改为 1.5 倍增长策略
+        value_capacity = value_capacity + value_capacity / 2; 
+        values = (long *)realloc(values, value_capacity * sizeof(long));
+        if (values == NULL) {
+            fprintf(stderr, "Error: Failed to reallocate memory for values.\n");
+            exit(EXIT_FAILURE);
         }
+    }
 
-        int target_rank = pt->quantile * tracker->total_count;
-        int actual_rank = pt->count_left;
+    values[value_count++] = value;
+    is_sorted = false; // 标记为未排序
 
-        if (actual_rank > target_rank && pt->count_left > 0) {
-            pt->estimate = pt->left_candidates[pt->left_index % OBSERVE_SIZE];
-        } else if (actual_rank < target_rank && pt->count_right > 0) {
-            pt->estimate = pt->right_candidates[pt->right_index % OBSERVE_SIZE];
-        }
+    // 更新最大值和最小值
+    if (value > max_value) {
+        max_value = value;
+    }
+    if (value < min_value) {
+        min_value = value;
     }
 }
 
+// 比较函数用于qsort
+static inline int compare_long(const void *a, const void *b) {
+    long arg1 = *(const long *)a;
+    long arg2 = *(const long *)b;
+    return (arg1 > arg2) - (arg1 < arg2);
+}
+
+// 查询百分位数
 long tracker_query(double quantile) {
-    latency_tracker_t *tracker = &g_tracker;
-    for (int i = 0; i < tracker->track_count; ++i) {
-        if (fabs(tracker->tracks[i].quantile - quantile) < 1e-6) {
-            return tracker->tracks[i].estimate;
-        }
+    if (value_count == 0) {
+        fprintf(stderr, "No values inserted yet.\n");
+        return -1;
     }
-    return -1;
+
+    // 如果未排序，则进行排序
+    if (!is_sorted) {
+        qsort(values, value_count, sizeof(long), (int (*)(const void *, const void *))compare_long);
+        is_sorted = true;
+    }
+
+    int index = (int)(quantile * (value_count - 1) + 0.5); // 四舍五入
+    return values[index];
 }
 
+// 打印所有百分比对应的百分位数
 void tracker_print_results() {
-    latency_tracker_t *tracker = &g_tracker;
-
-    for (int i = 0; i < tracker->track_count; ++i) {
-        long estimate = tracker_query(tracker->tracks[i].quantile);
-        printf("%.2f%% latency (approx): %.3f ms\n",
-               tracker->tracks[i].quantile * 100, estimate / 1000.0);
+    if (value_count == 0) {
+        printf("No values to display.\n");
+        return;
     }
-    printf("Max latency: %.3f ms, Min latency: %.3f ms\n",
-           tracker->global_max / 1000.0, tracker->global_min / 1000.0);
+
+    printf("Percentile results:\n");
+    for (int i = 0; i < percentile_count; i++) {
+        double quantile = percentiles[i];
+        long result = tracker_query(quantile);
+                printf("%.2f%% latency: %.3f ms\n",
+               quantile * 100, result / 1000.0);
+    }
+
+    // 打印最大值和最小值
+        printf("Max latency: %.3f ms, Min latency: %.3f ms\n",
+           max_value / 1000.0, min_value / 1000.0);
+}
+
+// 释放内存
+void tracker_free() {
+    if (percentiles != NULL) {
+        free(percentiles);
+        percentiles = NULL;
+    }
+    if (values != NULL) {
+        free(values);
+        values = NULL;
+    }
 }
