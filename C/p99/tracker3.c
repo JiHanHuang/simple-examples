@@ -67,8 +67,8 @@ void tracker_print_percentiles(long value) {
     printf("%ld ", value);
     for (int i = 0; i < tracker->track_count; ++i) {
         percentile_track_t *pt = &tracker->tracks[i];
-       printf("[%.2f%%, E:%ld, C:%d, L:%d, R:%d,  ", 
-               pt->quantile, pt->estimate,pt->count, pt->count_left, pt->count_right);
+        printf("[%.2f%%, E:%ld, C:%d, L:%d, R:%d,  ", pt->quantile,
+               pt->estimate, pt->count, pt->count_left, pt->count_right);
         for (int j = 0; j < 2 * OBSERVE_SIZE + 1; ++j) {
             printf("%ld ", pt->candidates[j]);
         }
@@ -163,6 +163,4 @@ void tracker_print_results() {
            tracker->global_max / 1000.0, tracker->global_min / 1000.0);
 }
 
-void tracker_free() {
-    return;
-}
+void tracker_free() { return; }

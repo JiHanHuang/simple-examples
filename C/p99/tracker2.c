@@ -121,6 +121,4 @@ void tracker_print_results() {
            tracker->global_max / 1000.0, tracker->global_min / 1000.0);
 }
 
-void tracker_free() {
-    return;
-}
+void tracker_free() { return; }

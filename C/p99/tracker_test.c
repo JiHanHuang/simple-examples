@@ -63,6 +63,6 @@ int main() {
     tracker_print_results();
 
     tracker_free();
-    
+
     return 0;
 }

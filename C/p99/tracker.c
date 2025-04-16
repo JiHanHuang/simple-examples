@@ -8,22 +8,19 @@
  * @copyright Copyright (c) 2025 中电信智能网络科技有限公司
  * 
  */
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <stdbool.h>
 #include <time.h>
-#include <limits.h>
 
 #define DEFAULT_VALUES_NUM 1024
 
-static double *percentiles = NULL; // 存储百分比值
-static int percentile_count = 0;  // 百分比值的数量
-static long *values = NULL;      // 存储插入的值
-static int value_count = 0;      // 当前值的数量
-static int value_capacity = DEFAULT_VALUES_NUM;   // 当前数组容量
-static bool is_sorted = true;              // 标记数组是否已排序
-static long max_value = LONG_MIN;          // 最大值
-static long min_value = LONG_MAX;          // 最小值
+static double *percentiles = NULL;              // 存储百分比值
+static int percentile_count = 0;                // 百分比值的数量
+static long *values = NULL;                     // 存储插入的值
+static int value_count = 0;                     // 当前值的数量
+static int value_capacity = DEFAULT_VALUES_NUM; // 当前数组容量
+static bool is_sorted = true;                   // 标记数组是否已排序
 
 long current_time_us() {
     struct timespec ts;
@@ -51,15 +48,13 @@ void tracker_init(double *input_percentiles, int count) {
         exit(EXIT_FAILURE);
     }
     value_count = 0;
-    max_value = LONG_MIN;
-    min_value = LONG_MAX;
 }
 
 // 插入值（不保持有序）
 void tracker_insert(long value) {
     if (value_count == value_capacity) {
         // 改为 1.5 倍增长策略
-        value_capacity = value_capacity + value_capacity / 2; 
+        value_capacity = value_capacity + value_capacity / 2;
         values = (long *)realloc(values, value_capacity * sizeof(long));
         if (values == NULL) {
             fprintf(stderr, "Error: Failed to reallocate memory for values.\n");
@@ -69,14 +64,6 @@ void tracker_insert(long value) {
 
     values[value_count++] = value;
     is_sorted = false; // 标记为未排序
-
-    // 更新最大值和最小值
-    if (value > max_value) {
-        max_value = value;
-    }
-    if (value < min_value) {
-        min_value = value;
-    }
 }
 
 // 比较函数用于qsort
@@ -95,7 +82,8 @@ long tracker_query(double quantile) {
 
     // 如果未排序，则进行排序
     if (!is_sorted) {
-        qsort(values, value_count, sizeof(long), (int (*)(const void *, const void *))compare_long);
+        qsort(values, value_count, sizeof(long),
+              (int (*)(const void *, const void *))compare_long);
         is_sorted = true;
     }
 
@@ -114,13 +102,13 @@ void tracker_print_results() {
     for (int i = 0; i < percentile_count; i++) {
         double quantile = percentiles[i];
         long result = tracker_query(quantile);
-                printf("%.2f%% latency: %.3f ms\n",
-               quantile * 100, result / 1000.0);
+        printf("%.2f%% latency: %.3f ms\n", quantile * 100, result / 1000.0);
     }
 
+    printf("Total values number: %d\n", value_count);
     // 打印最大值和最小值
-        printf("Max latency: %.3f ms, Min latency: %.3f ms\n",
-           max_value / 1000.0, min_value / 1000.0);
+    printf("Max latency: %.3f ms, Min latency: %.3f ms\n",
+           values[value_count - 1] / 1000.0, values[0] / 1000.0);
 }
 
 // 释放内存
