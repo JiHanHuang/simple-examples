@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: redis-cluster
+  labels:
+    app: redis-cluster
+spec:
+  serviceName: redis-cluster-service
+  replicas: 6  # 3主3从
+  selector:
+    matchLabels:
+      app: redis-cluster
+  updateStrategy:
+    type: RollingUpdate
+    rollingUpdate:
+      partition: 0  # 灰度更新时可用
+  template:
+    metadata:
+      labels:
+        app: redis-cluster
+    spec:
+      # 优雅关闭
+      terminationGracePeriodSeconds: 30
+    
+      containers:
+      - name: redis
+        image: redis:7-alpine  # 使用稳定版本
+        imagePullPolicy: IfNotPresent
+        
+        ports:
+        - containerPort: 6379
+          name: client
+        - containerPort: 16379
+          name: gossip
+        
+        # 挂载配置
+        volumeMounts:
+        - name: redis-data
+          mountPath: /data
+        - name: redis-config
+          mountPath: /usr/local/etc/redis
+        
+        # 启动命令
+        command:
+        - redis-server
+        args:
+        - /usr/local/etc/redis/redis.conf
+      
+      # 配置卷
+      volumes:
+      - name: redis-config
+        configMap:
+          name: redis-cluster-config
+          items:
+          - key: redis.conf
+            path: redis.conf
+  
+  # 持久化存储声明
+  volumeClaimTemplates:
+  - metadata:
+      name: redis-data
+    spec:
+      accessModes:
+      - ReadWriteOnce
+      storageClassName: local-path  # 根据你的集群修改
+      resources:
+        requests:
+          storage: 1Gi
